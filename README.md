@@ -1,11 +1,11 @@
 # Raspicultor
 
-Custom MIDI Controller plus a Raspberry pi running Supercollider synthesizer/effects processor. Using an external USB sound card for high fidelity.
+Custom MIDI Controller plus a Raspberry Pi 3 (model B) running Supercollider as a synthesizer and effects processor. Using an external USB sound card for high fidelity.
 
 Based in API.Cultor: https://github.com/sonidosmutantes/apicultor
 
 ![](img/controller.jpg)
-Build by [Yaeltex](https://yaeltex.com/en) custom MIDI controllers
+Built by [Yaeltex](https://yaeltex.com/en) custom MIDI controllers.
 
 ![](img/raspicultor_arq.png)
 
