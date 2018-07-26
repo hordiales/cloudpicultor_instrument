@@ -1,11 +1,17 @@
-# Raspicultor Cloud Instrument
-
-Custom MIDI Controller plus a Raspberry Pi 3 (model B) running Supercollider as a synthesizer and effects processor. Using an external USB sound card for high fidelity.
-
-Based in API.Cultor: https://github.com/sonidosmutantes/apicultor
-
 *NEW!*: Bela hardware support added with ultra low latency
 
+# Cloud Instrument
+
+Custom MIDI Controller plus embeded hardware running Supercollider as a synthesizer and effects processor. Using an external USB sound card for high fidelity.
+
+Based in API.Cultor MIR retrieving OSC service: https://github.com/sonidosmutantes/apicultor
+
+### Supported hardware:
+
+* Raspberry Pi 3 (model B)
+* Bela (recommended for ultralow latency)
+
+### Physical controller:
 
 ![](img/controller.jpg)
 Built by [Yaeltex](https://yaeltex.com/en) custom MIDI controllers.
