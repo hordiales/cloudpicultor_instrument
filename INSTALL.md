@@ -2,7 +2,7 @@
 
 Right now is Python 2.7 is supported.
 
-    $ sudo apt-get install python2.7
+    $ sudo apt-get install python2.7 python-pip -y
 
 ## OSC Client
     $ git clone https://github.com/ptone/pyosc.git
