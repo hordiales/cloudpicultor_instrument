@@ -68,6 +68,12 @@ Running a browser in an external computer, tablet, mobile phone, etc.
 
 ![](img/UI%20ArCiTec.png)
 
+# Recognition
+
+* Interview: https://www.youtube.com/watch?v=pFosDJJtylk
+* Cloud Instrument mention in [ArCiTec prize, Technology applied to Arts](https://arcitec.frba.utn.edu.ar/tecnologia-aplicada-al-arte/) (2018).
+* Publication: [Sound recycling from public databases](https://www.researchgate.net/publication/317388443_Sound_recycling_from_public_databases) @ [Audio Mostly](http://audiomostly.com) 2017 
+
 # Art installations
 
 ![](img/IMG_20180503_181957_HDR.jpg)
