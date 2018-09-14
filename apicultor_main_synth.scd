@@ -53,13 +53,14 @@ s.waitForBoot {
 	//TODO: check if there is a way to avoid processing when are disabled (pitchratio=1, delamix=0, etc
 	//Chain order: freeze -> vibrato -> pan-> pithshift -> filters -> delay -> reverb
 	//TODO: add compression? freqshift? Stereo vibrato? stereo delay?
-SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096, pan=0, startPos=0, delay = 0.25, numchannels=1, delaymix=0, lfoamount= 0, lforate=0, pitchratio=1, roomsize=0.5, reverbmix=0, lpfcutoff=20000, bpfcutoff=20000, hpfcutoff=100;
+SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096, pan=0, startPos=0, delay = 0.25, numchannels=1, delaymix=0, lfoamount= 0, lforate=0, pitchratio=1, roomsize=0.5, reverbmix=0, lpfcutoff=20000, bpfcutoff=20000, hpfcutoff=100, loopstatus=1, trigvalue=1 ;
 		//Note about HPF cutoff: Cutoff frequency in Hertz. WARNING: due to the nature of its implementation frequency values close to 0 may cause glitches and/or extremely loud audio artifacts!
 
 	var in, chain, sig, dupsig, adelay, vibrato;
 
 	//plays buffer in loop
-	in = PlayBuf.ar(1, bufnum, BufRateScale.kr(bufnum),loop: 1);
+	~numChannels = 1;
+	in = PlayBuf.ar(~numChannels, bufnum, BufRateScale.kr(bufnum), trigger: trigvalue, loop: loopstatus);
 //in = PlayBuf.ar(numchannels, bufnum, BufRateScale.kr(bufnum),loop: 1);
 
 	//with FREEZE (point=0 off)
@@ -570,6 +571,44 @@ OSCdef.new(
 	},
 	'/fx/factor',
 );
+
+// Sequencer
+OSCdef.new(
+	\seq_trigger,
+	{
+		arg msg;
+		var channel = msg[1].asFloat;
+		//("Voice: "++(~active_voice)++" , Channel:  "++channel).postln;
+
+		~seq_voice= ~active_voice-1;
+		//TODO: sequence by channel number (0 or 1) fixed voices
+		//~seq_voice= channel;
+
+	   //loop disable
+	   ~synthInstances[~seq_voice].set(\loopstatus, 0);
+
+	//This task forces transition to start playback from the beginning
+	b = Task({ //1 time
+		1.do { arg i;
+			~synthInstances[~seq_voice].set(\trigvalue, -1);
+			0.01.wait;
+			("Trigger").postln;
+			~synthInstances[~seq_voice].set(\trigvalue, 1);
+		}
+	});
+	b.start;
+	},
+	'/seq/trigger',
+);
+// triggers from any midi input
+//MIDIClient.init;
+MIDIIn.connectAll;
+~seq_trigger = MIDIFunc.noteOn({ |vel, num, chan|
+	if(num == 48 && vel==64 ,{ // On / Off
+		//"---> note % @ velocity %, chan %\n".postf(num, vel, chan);
+		~osc_server_SuperCollider.sendMsg('/seq/trigger', chan);
+	});
+});
 
 ~osc_server_APICultorService.sendMsg("/chat", "Hello. SuperCollider is ready to rock!");
 
