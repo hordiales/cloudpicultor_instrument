@@ -12,12 +12,12 @@ https://github.com/sonidosmutantes/apicultor
 */
 
 //General config
-~host = "mac";
-//~host = "raspi";
+//~host = "mac";
+~host = "raspi";
 
-//~midi_controller = "yaeltex"; //WARNING: fails if controller is not present
+~midi_controller = "yaeltex"; //WARNING: fails if controller is not present
 //~midi_controller = "midimix";
-~midi_controller = "none";
+//~midi_controller = "none";
 
 if( ~host=="mac", {
 	"Running in mac".postln;
@@ -580,9 +580,9 @@ OSCdef.new(
 		var channel = msg[1].asFloat;
 		//("Voice: "++(~active_voice)++" , Channel:  "++channel).postln;
 
-		~seq_voice= ~active_voice-1;
-		//TODO: sequence by channel number (0 or 1) fixed voices
-		//~seq_voice= channel;
+		//~seq_voice= ~active_voice-1;
+		//sequence by channel number (0 or 1) fixed voices
+		~seq_voice= channel;
 
 	   //loop disable
 	   ~synthInstances[~seq_voice].set(\loopstatus, 0);
@@ -602,7 +602,7 @@ OSCdef.new(
 );
 // triggers from any midi input
 //MIDIClient.init;
-MIDIIn.connectAll;
+//MIDIIn.connectAll;
 ~seq_trigger = MIDIFunc.noteOn({ |vel, num, chan|
 	if(num == 48 && vel==64 ,{ // On / Off
 		//"---> note % @ velocity %, chan %\n".postf(num, vel, chan);
@@ -626,16 +626,16 @@ if( ~host=="mac", {
 	("Default sounds").postln;
 		//Raspberry pi
 		//voice1
-		~bufferinstances[0]= Buffer.read(s, "/home/pi/dev/apicultor/cloud_instrument/Basspad.wav");
-		~synthInstances[0] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[0].bufnum, \out, 0, \vol, 0]); //vol 0
+		~bufferinstances[0]= Buffer.read(s, "/home/pi/samples/Basspad.wav");
+		~synthInstances[0] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[0].bufnum, \out, 0, \vol, 1]); //vol 0
 
 
 		//voice 2
-		~bufferinstances[1]= Buffer.read(s, "/home/pi/dev/apicultor/cloud_instrument/Ride_01-21.wav");
-		~synthInstances[1] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[1].bufnum, \out, 0, \vol, 0]); //vol 0
+		~bufferinstances[1]= Buffer.read(s, "/home/pi/samples/Ride_01-21.wav");
+		~synthInstances[1] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[1].bufnum, \out, 0, \vol, 1]); //vol 0
 
 		//voice 8 (bank2+v4)
-		~bufferinstances[7]= Buffer.read(s, "/home/pi/dev/apicultor/cloud_instrument/instrucciones.wav");
+		~bufferinstances[7]= Buffer.read(s, "/home/pi/samples/instrucciones.wav");
 		~synthInstances[7] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[7].bufnum, \out, 0, \vol, 0]); //vol 0
 		//~synthInstances[7] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[7].bufnum, \out, 0, \vol, 0.7, \pitchratio, 0.85]); //pitch ratio low
 });
