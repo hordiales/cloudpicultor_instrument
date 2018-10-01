@@ -85,5 +85,6 @@ Running a browser in an external computer, tablet, mobile phone, etc.
 
 # Art installations
 
-![](img/IMG_20180503_181957_HDR.jpg)
+![](img/IMG_20180503_183147_HDR.jpg)
+![](img/IMG_20180504_205028_HHT.jpg)
 Sounds from the Cloud installation.
