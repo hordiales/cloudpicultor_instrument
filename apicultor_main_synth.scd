@@ -375,6 +375,20 @@ OSCdef.new(
 	'/synth/freeze',
 );
 
+OSCdef.new(
+	\synth_reset,
+	{
+		var v_pos = ~active_voice-1;
+		~synthInstances[v_pos].free;
+
+		//~default_volume = 0;
+		~default_volume = 1;
+		~synthInstances[v_pos] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[v_pos].bufnum, \out, 0, \vol, ~default_volume]);
+
+		("Synth fx reset").postln;
+	},
+	'/synth/reset',
+);
 //////////////////////////////////
 //(single) Voice configuration (FX)
 //////////////////////////////////
@@ -627,12 +641,20 @@ if( ~host=="mac", {
 		//Raspberry pi
 		//voice1
 		~bufferinstances[0]= Buffer.read(s, "/home/pi/samples/Basspad.wav");
-		~synthInstances[0] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[0].bufnum, \out, 0, \vol, 1]); //vol 0
+		~synthInstances[0] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[0].bufnum, \out, 0, \vol, 1]); //vol 1
 
 
 		//voice 2
 		~bufferinstances[1]= Buffer.read(s, "/home/pi/samples/Ride_01-21.wav");
-		~synthInstances[1] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[1].bufnum, \out, 0, \vol, 1]); //vol 0
+		~synthInstances[1] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[1].bufnum, \out, 0, \vol, 1]); //vol 1
+		
+		//voice 3
+		~bufferinstances[2]= Buffer.read(s, "/home/pi/samples/126_sample2.wav");
+		~synthInstances[2] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[2].bufnum, \out, 0, \vol, 0]); //vol 0
+		//voice 4
+		~bufferinstances[3]= Buffer.read(s, "/home/pi/samples/Breezy_sample0.wav");
+		~synthInstances[3] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[3].bufnum, \out, 0, \vol, 0]); //vol 0
+
 
 		//voice 8 (bank2+v4)
 		~bufferinstances[7]= Buffer.read(s, "/home/pi/samples/instrucciones.wav");
