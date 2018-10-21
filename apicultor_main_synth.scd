@@ -79,7 +79,6 @@ SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096
 		//pitchRatio - the ratio of the pitch shift. Must be from 0.0 to 4.0.
 	sig = PitchShift.ar(sig, 0.1, pitchratio, 0, 0.004);
 
-
 	sig = LPF.ar(sig, lpfcutoff, 1, 0);
 	//sig = BPF.ar(sig, bpfcutoff, 1, 0); //FIXME BPF (always enabled)
 	sig = HPF.ar(sig, hpfcutoff, 1, 0);
@@ -104,7 +103,8 @@ SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096
 
 
 	//with DELAY
-	adelay = DelayN.ar( sig, delay, delay, delaymix, sig); // input is mixed with delay via the add input (delaymix = 0 -> off)
+    ~maxdelaytime = 2; // max delay time 2000 mseg
+    sig = DelayN.ar( sig, ~maxdelaytime, delay, delaymix, sig); // input is mixed with delay via the add input (delaymix = 0 -> off)
 
 	//with Reverb (in, mix: 0.33, room: 0.5, damp: 0.5, mul: 1, add: 0)
 	sig = FreeVerb.ar(sig, reverbmix, roomsize, 0.5, 1, 0 );

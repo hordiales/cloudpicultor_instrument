@@ -105,7 +105,7 @@ if( ~host=="mac", {
 };
 
 //Delay
-~delay_max = 3;
+~delay_max = 2; // 2000 mseg
 ~yaeltex.ctls['Delay'].onChange = {|val|
 	val = val.linlin(0,127,0,~delay_max).asFloat;
 	//("SYNTH: Delay "++val).postln;
