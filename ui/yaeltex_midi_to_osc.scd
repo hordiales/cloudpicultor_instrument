@@ -105,6 +105,7 @@ if( ~host=="mac", {
 };
 
 //Delay
+~delay_max = 2; // 2000 mseg
 ~yaeltex.ctls['Delay'].onChange = {|val|
 	val = val.linlin(0,127,0,~delay_max).asFloat;
 	//("SYNTH: Delay "++val).postln;
@@ -135,7 +136,7 @@ if( ~host=="mac", {
 
 //Cutoff
 ~yaeltex.ctls['Cutoff'].onChange = {|val|
-	val = val.linlin(0,127,20,15000).asFloat;
+	val = val.linexp(0,127,20,20000).asFloat;
 	//("SYNTH: Cutoff "++val).postln;
 	~osc_server_SuperCollider.sendMsg(~fx_cutoff, val);
 
@@ -321,6 +322,11 @@ if( ~host=="mac", {
 	if( val==1, { //to the rigth
 		~osc_server_SuperCollider.sendMsg("/synth/granular/trigger", 1);
 	});
+	if( val==0, {
+        //joystick abajo
+		~osc_server_SuperCollider.sendMsg("/synth/reset", 0, -1 ); //reset effect
+	});
+	
 };
 //Y: Freeze ON/OFF
 //~yaeltex.ctls['joy2Synth_y'].onChange = {|val|
@@ -328,9 +334,11 @@ if( ~host=="mac", {
 	val = val.linlin(0,127,1,0).asFloat;
 	//("Joystick2 (with-return) y value:"++val).postln;
 	if( val==1, {
+        //joystick arriba
 		~osc_server_SuperCollider.sendMsg("/synth/freeze", 1, -1 ); //ON , -1 means active_voice
 	});
 	if( val==0, {
+        //joystick abajo
 		~osc_server_SuperCollider.sendMsg("/synth/freeze", 0, -1 ); //OFF , -1 means active_voice
 	});
 };

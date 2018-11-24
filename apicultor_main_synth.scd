@@ -79,7 +79,6 @@ SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096
 		//pitchRatio - the ratio of the pitch shift. Must be from 0.0 to 4.0.
 	sig = PitchShift.ar(sig, 0.1, pitchratio, 0, 0.004);
 
-
 	sig = LPF.ar(sig, lpfcutoff, 1, 0);
 	//sig = BPF.ar(sig, bpfcutoff, 1, 0); //FIXME BPF (always enabled)
 	sig = HPF.ar(sig, hpfcutoff, 1, 0);
@@ -104,7 +103,8 @@ SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096
 
 
 	//with DELAY
-	adelay = DelayN.ar( sig, delay, delay, delaymix, sig); // input is mixed with delay via the add input (delaymix = 0 -> off)
+    ~maxdelaytime = 2; // max delay time 2000 mseg
+    sig = DelayN.ar( sig, ~maxdelaytime, delay, delaymix, sig); // input is mixed with delay via the add input (delaymix = 0 -> off)
 
 	//with Reverb (in, mix: 0.33, room: 0.5, damp: 0.5, mul: 1, add: 0)
 	sig = FreeVerb.ar(sig, reverbmix, roomsize, 0.5, 1, 0 );
@@ -375,6 +375,20 @@ OSCdef.new(
 	'/synth/freeze',
 );
 
+OSCdef.new(
+	\synth_reset,
+	{
+		var v_pos = ~active_voice-1;
+		~synthInstances[v_pos].free;
+
+		//~default_volume = 0;
+		~default_volume = 1;
+		~synthInstances[v_pos] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[v_pos].bufnum, \out, 0, \vol, ~default_volume]);
+
+		("Synth fx reset").postln;
+	},
+	'/synth/reset',
+);
 //////////////////////////////////
 //(single) Voice configuration (FX)
 //////////////////////////////////
@@ -628,12 +642,20 @@ if( ~host=="mac", {
 		//Raspberry pi
 		//voice1
 		~bufferinstances[0]= Buffer.read(s, "/home/pi/samples/Basspad.wav");
-		~synthInstances[0] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[0].bufnum, \out, 0, \vol, 1]); //vol 0
+		~synthInstances[0] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[0].bufnum, \out, 0, \vol, 1]); //vol 1
 
 
 		//voice 2
 		~bufferinstances[1]= Buffer.read(s, "/home/pi/samples/Ride_01-21.wav");
-		~synthInstances[1] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[1].bufnum, \out, 0, \vol, 1]); //vol 0
+		~synthInstances[1] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[1].bufnum, \out, 0, \vol, 1]); //vol 1
+		
+		//voice 3
+		~bufferinstances[2]= Buffer.read(s, "/home/pi/samples/126_sample2.wav");
+		~synthInstances[2] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[2].bufnum, \out, 0, \vol, 0]); //vol 0
+		//voice 4
+		~bufferinstances[3]= Buffer.read(s, "/home/pi/samples/Breezy_sample0.wav");
+		~synthInstances[3] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[3].bufnum, \out, 0, \vol, 0]); //vol 0
+
 
 		//voice 8 (bank2+v4)
 		~bufferinstances[7]= Buffer.read(s, "/home/pi/samples/instrucciones.wav");
