@@ -12,12 +12,12 @@ https://github.com/sonidosmutantes/apicultor
 */
 
 //General config
-//~host = "mac";
-~host = "raspi";
+~host = "mac";
+//~host = "raspi";
 
-~midi_controller = "yaeltex"; //WARNING: fails if controller is not present
+//~midi_controller = "yaeltex"; //WARNING: fails if controller is not present
 //~midi_controller = "midimix";
-//~midi_controller = "none";
+~midi_controller = "none";
 
 if( ~host=="mac", {
 	"Running in mac".postln;
@@ -600,6 +600,7 @@ OSCdef.new(
 	},
 	'/seq/trigger',
 );
+
 // triggers from any midi input
 //MIDIClient.init;
 //MIDIIn.connectAll;
