@@ -28,6 +28,9 @@ if( ~host=="mac", {
 	//Raspberry Pi low latency config
 	//jackd -P75 -t2000 -dalsa -dhw:S2 -p4096 -n7 -r44100 -s
 	s.options.sampleRate= 44100;
+	~number_of_mb = 32; //default is 8mb
+	//~number_of_mb = 512;
+	s.options.memSize = ~number_of_mb * 1024;
 });
 
 //TODO: ver multiple outputs
@@ -68,6 +71,7 @@ SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096
 	chain = PV_MagFreeze(chain, point);
 	dupsig = IFFT(chain).dup;
 
+	//LFO
 	vibrato = SinOsc.ar(lforate,Rand(0,2.0));
 	dupsig = vibrato*dupsig*(lfoamount) + dupsig*(1-lfoamount);
 
@@ -76,7 +80,7 @@ SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096
 	sig = Balance2.ar(sig[0], sig[1], pan);
 
 	//with Pitch Shift (rate)
-		//pitchRatio - the ratio of the pitch shift. Must be from 0.0 to 4.0.
+	//pitchRatio - the ratio of the pitch shift. Must be from 0.0 to 4.0.
 	sig = PitchShift.ar(sig, 0.1, pitchratio, 0, 0.004);
 
 	sig = LPF.ar(sig, lpfcutoff, 1, 0);
@@ -643,21 +647,34 @@ if( ~host=="mac", {
 		~bufferinstances[0]= Buffer.read(s, "/home/pi/samples/Basspad.wav");
 		~synthInstances[0] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[0].bufnum, \out, 0, \vol, 1]); //vol 1
 
-
 		//voice 2
-		~bufferinstances[1]= Buffer.read(s, "/home/pi/samples/Ride_01-21.wav");
-		~synthInstances[1] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[1].bufnum, \out, 0, \vol, 1]); //vol 1
+//		~bufferinstances[1]= Buffer.read(s, "/home/pi/samples/Ride_01-21.wav");
+//		~synthInstances[1] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[1].bufnum, \out, 0, \vol, 1]); //vol 1
 		
 		//voice 3
-		~bufferinstances[2]= Buffer.read(s, "/home/pi/samples/126_sample2.wav");
+		~bufferinstances[2]= Buffer.read(s, "/home/pi/redpanal-wavs/0b6c17d0-55e1-44ec-994c-adfdfebd9f1b-converted_sample4.wav");
+		//~bufferinstances[2]= Buffer.read(s, "/home/pi/samples/126_sample2.wav");
 		~synthInstances[2] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[2].bufnum, \out, 0, \vol, 0]); //vol 0
+
 		//voice 4
-		~bufferinstances[3]= Buffer.read(s, "/home/pi/samples/Breezy_sample0.wav");
+		~bufferinstances[3]= Buffer.read(s, "/home/pi/redpanal-wavs/101_004_combinacion_sample1.wav");
+		//~bufferinstances[3]= Buffer.read(s, "/home/pi/samples/Breezy_sample0.wav");
 		~synthInstances[3] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[3].bufnum, \out, 0, \vol, 0]); //vol 0
 
+		//voice 5
+		~bufferinstances[4]= Buffer.read(s, "/home/pi/redpanal-wavs/mbaraj-644.wav");
+		~synthInstances[4] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[4].bufnum, \out, 0, \vol, 0]); //vol 0
+		//voice 6
+		~bufferinstances[5]= Buffer.read(s, "/home/pi/redpanal-wavs/mbaraj-439-part1.wav");
+		~synthInstances[5] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[5].bufnum, \out, 0, \vol, 0]); //vol 0
+
+		//voice 7
+		~bufferinstances[6]= Buffer.read(s, "/home/pi/redpanal-wavs/hordia-algorave-algosix-extract-1.3min.wav");
+		~synthInstances[6] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[6].bufnum, \out, 0, \vol, 0]); //vol 0
 
 		//voice 8 (bank2+v4)
-		~bufferinstances[7]= Buffer.read(s, "/home/pi/samples/instrucciones.wav");
+		~bufferinstances[7]= Buffer.read(s, "/home/pi/redpanal-wavs/impro-livecoding-tidal-1.3min.wav");
+		//~bufferinstances[7]= Buffer.read(s, "/home/pi/samples/instrucciones.wav");
 		~synthInstances[7] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[7].bufnum, \out, 0, \vol, 0]); //vol 0
 		//~synthInstances[7] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[7].bufnum, \out, 0, \vol, 0.7, \pitchratio, 0.85]); //pitch ratio low
 });
