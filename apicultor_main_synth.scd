@@ -671,11 +671,11 @@ if( ~host=="mac", {
 		~synthInstances[5] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[5].bufnum, \out, 0, \vol, 0]); //vol 0
 
 		//voice 7
-		~bufferinstances[6]= Buffer.read(s, "/home/pi/redpanal-wavs/hordia-algorave-algosix-extract-1.3min.wav");
+		~bufferinstances[6]= Buffer.read(s, "/home/pi/redpanal-wavs/5_AI_Plays_Guitar_part1.wav");
 		~synthInstances[6] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[6].bufnum, \out, 0, \vol, 0]); //vol 0
 
 		//voice 8 (bank2+v4)
-		~bufferinstances[7]= Buffer.read(s, "/home/pi/redpanal-wavs/impro-livecoding-tidal-1.3min.wav");
+		~bufferinstances[7]= Buffer.read(s, "/home/pi/redpanal-wavs/impro-livecoding-tidal-part1.wav");
 		//~bufferinstances[7]= Buffer.read(s, "/home/pi/samples/instrucciones.wav");
 		~synthInstances[7] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[7].bufnum, \out, 0, \vol, 0]); //vol 0
 		//~synthInstances[7] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[7].bufnum, \out, 0, \vol, 0.7, \pitchratio, 0.85]); //pitch ratio low
