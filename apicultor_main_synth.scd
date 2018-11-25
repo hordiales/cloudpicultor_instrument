@@ -64,17 +64,13 @@ SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096
 	//plays buffer in loop
 	~numChannels = 1;
 	in = PlayBuf.ar(~numChannels, bufnum, BufRateScale.kr(bufnum), trigger: trigvalue, loop: loopstatus);
-//in = PlayBuf.ar(numchannels, bufnum, BufRateScale.kr(bufnum),loop: 1);
+	//in = PlayBuf.ar(numchannels, bufnum, BufRateScale.kr(bufnum),loop: 1);
 
 	//with FREEZE (point=0 off)
 	chain = FFT(LocalBuf(4096), in);
 	chain = PV_MagFreeze(chain, point);
 	//dupsig = IFFT(chain).dup;
-	sig = IFFT(chain)*vol; //volume adjust
-
-	//with PAN (Note: stereo voices duplicates audio memory buffer)
-	//sig = Splay.ar(vol *dupsig);
-	//sig = Balance2.ar(sig[0], sig[1], pan);
+	sig = IFFT(chain);
 
 	//LFO
 	vibrato = SinOsc.ar(lforate,Rand(0,2.0));
@@ -84,9 +80,9 @@ SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096
 	//pitchRatio - the ratio of the pitch shift. Must be from 0.0 to 4.0.
 	sig = PitchShift.ar(sig, 0.1, pitchratio, 0, 0.004);
 
-	//sig = LPF.ar(sig, lpfcutoff, 1, 0);
+	//sig = LPF.ar(sig, lpfcutoff, 1, 0); //Low Pass Filter
 	//sig = BPF.ar(sig, bpfcutoff, 1, 0); //FIXME BPF (always enabled)
-	sig = HPF.ar(sig, hpfcutoff, 1, 0);
+	sig = HPF.ar(sig, hpfcutoff, 1, 0); //High Pass Filter
 
 		/*
 		  if( filtermode==1, {
@@ -118,6 +114,10 @@ SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096
 	//Other FXs
 	//right = FreqShift.ar(left, SinOsc.kr(3.23, 0, 5));
 
+	//with PAN (Note: stereo voices duplicates audio memory buffer)
+	dupsig = Splay.ar(vol*sig).dup; //audio duplication and volume adjustment
+	sig = Balance2.ar(dupsig[0], dupsig[1], pan);
+	
 	Out.ar(busout, sig);
 }).add;
 
@@ -649,8 +649,8 @@ if( ~host=="mac", {
 		~synthInstances[0] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[0].bufnum, \out, 0, \vol, 1]); //vol 1
 
 		//voice 2
-//		~bufferinstances[1]= Buffer.read(s, "/home/pi/samples/Ride_01-21.wav");
-//		~synthInstances[1] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[1].bufnum, \out, 0, \vol, 1]); //vol 1
+		~bufferinstances[1]= Buffer.read(s, "/home/pi/samples/Ride_01-21.wav");
+		~synthInstances[1] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[1].bufnum, \out, 0, \vol, 1]); //vol 1
 		
 		//voice 3
 		~bufferinstances[2]= Buffer.read(s, "/home/pi/redpanal-wavs/0b6c17d0-55e1-44ec-994c-adfdfebd9f1b-converted_sample4.wav");
