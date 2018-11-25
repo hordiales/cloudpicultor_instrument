@@ -64,7 +64,6 @@ SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096
 	//plays buffer in loop
 	~numChannels = 1;
 	in = PlayBuf.ar(~numChannels, bufnum, BufRateScale.kr(bufnum), trigger: trigvalue, loop: loopstatus);
-	//in = PlayBuf.ar(numchannels, bufnum, BufRateScale.kr(bufnum),loop: 1);
 
 	//with FREEZE (point=0 off)
 	chain = FFT(LocalBuf(4096), in);
@@ -74,7 +73,7 @@ SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096
 
 	//LFO
 	vibrato = SinOsc.ar(lforate,Rand(0,2.0));
-	dupsig = vibrato*sig*(lfoamount) + sig*(1-lfoamount);
+	sig = vibrato*sig*(lfoamount) + sig*(1-lfoamount);
 
 	//with Pitch Shift (rate)
 	//pitchRatio - the ratio of the pitch shift. Must be from 0.0 to 4.0.
@@ -115,7 +114,8 @@ SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096
 	//right = FreqShift.ar(left, SinOsc.kr(3.23, 0, 5));
 
 	//with PAN (Note: stereo voices duplicates audio memory buffer)
-	dupsig = Splay.ar(vol*sig).dup; //audio duplication and volume adjustment
+	//dupsig = Splay.ar(vol*sig).dup; //audio duplication and volume adjustment
+	dupsig = (sig*vol).dup(2);	
 	sig = Balance2.ar(dupsig[0], dupsig[1], pan);
 	
 	Out.ar(busout, sig);
@@ -649,7 +649,8 @@ if( ~host=="mac", {
 		~synthInstances[0] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[0].bufnum, \out, 0, \vol, 1]); //vol 1
 
 		//voice 2
-		~bufferinstances[1]= Buffer.read(s, "/home/pi/samples/Ride_01-21.wav");
+		~bufferinstances[1]= Buffer.read(s, "/home/pi/redpanal-wavs/hordia-algorave-algosix-extract-2.wav");
+		//~bufferinstances[1]= Buffer.read(s, "/home/pi/samples/Ride_01-21.wav");
 		~synthInstances[1] = Synth(\mutantefreeze, [\bufnum, ~bufferinstances[1].bufnum, \out, 0, \vol, 1]); //vol 1
 		
 		//voice 3
