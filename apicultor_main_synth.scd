@@ -69,21 +69,22 @@ SynthDef(\mutantefreeze, { arg busout=0, bufnum=0, point=0, vol=1, fftwidth=4096
 	//with FREEZE (point=0 off)
 	chain = FFT(LocalBuf(4096), in);
 	chain = PV_MagFreeze(chain, point);
-	dupsig = IFFT(chain).dup;
+	//dupsig = IFFT(chain).dup;
+	sig = IFFT(chain)*vol; //volume adjust
+
+	//with PAN (Note: stereo voices duplicates audio memory buffer)
+	//sig = Splay.ar(vol *dupsig);
+	//sig = Balance2.ar(sig[0], sig[1], pan);
 
 	//LFO
 	vibrato = SinOsc.ar(lforate,Rand(0,2.0));
-	dupsig = vibrato*dupsig*(lfoamount) + dupsig*(1-lfoamount);
-
-	//with PAN
-	sig = Splay.ar(vol *dupsig);
-	sig = Balance2.ar(sig[0], sig[1], pan);
+	dupsig = vibrato*sig*(lfoamount) + sig*(1-lfoamount);
 
 	//with Pitch Shift (rate)
 	//pitchRatio - the ratio of the pitch shift. Must be from 0.0 to 4.0.
 	sig = PitchShift.ar(sig, 0.1, pitchratio, 0, 0.004);
 
-	sig = LPF.ar(sig, lpfcutoff, 1, 0);
+	//sig = LPF.ar(sig, lpfcutoff, 1, 0);
 	//sig = BPF.ar(sig, bpfcutoff, 1, 0); //FIXME BPF (always enabled)
 	sig = HPF.ar(sig, hpfcutoff, 1, 0);
 
