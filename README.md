@@ -6,6 +6,8 @@ Custom MIDI Controller plus embedded hardware running Supercollider as a synthes
 
 Based in API.Cultor MIR retrieving OSC service: https://github.com/sonidosmutantes/apicultor
 
+![](img/IMG_20181101_002941_HDR.jpg)
+
 ### Supported hardware:
 
 * Raspberry Pi 3 (model B)
