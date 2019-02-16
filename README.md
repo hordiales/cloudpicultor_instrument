@@ -4,7 +4,7 @@
 
 Custom MIDI Controller plus embedded hardware running Supercollider as a synthesizer and effects processor. Using an external USB sound card for high fidelity.
 
-Based in API.Cultor MIR retrieving OSC service: https://github.com/sonidosmutantes/apicultor
+Powered by [API.Cultor](https://github.com/sonidosmutantes/apicultor) MIR retrieving OSC service.
 
 ![](img/IMG_20181101_002941_HDR.jpg)
 
