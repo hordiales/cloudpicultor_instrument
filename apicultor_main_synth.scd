@@ -15,9 +15,9 @@ https://github.com/sonidosmutantes/apicultor
 //~host = "mac";
 ~host = "raspi";
 
-~midi_controller = "yaeltex"; //WARNING: fails if controller is not present
+//~midi_controller = "yaeltex"; //WARNING: fails if controller is not present
 //~midi_controller = "midimix";
-//~midi_controller = "none";
+~midi_controller = "none";
 
 if( ~host=="mac", {
 	"Running in mac".postln;

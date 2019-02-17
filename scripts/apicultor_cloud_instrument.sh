@@ -13,4 +13,4 @@ sleep 1
 /home/pi/autoconnect-midi.sh >/dev/null 2>&1 &
 
 #Supercollider apicultor synth
-sclang -D apicultor_synth.scd 
+sclang -D apicultor_main_synth.scd 
