@@ -3,6 +3,18 @@
 "midi_to_osc.scd".loadRelative;
 ~yaeltex = YaeltexAPICultor(); //también hace el midi connect All
 
+
+////////////////////////////
+//Audiostellar
+~osc_port_audiiostellar = 8000;
+~network_localhost = "127.0.0.1";
+~network_audiostellar = ~network_localhost; //localhost
+~osc_server_AudioStellar= NetAddr.new(~network_audiostellar, ~osc_port_audiiostellar);
+~mir_audiostellar_spectral_centroid = "/sounds/playSpectralCentroid";
+~audiostellar_spectral_centroid_value = 0;
+////////////////////////////
+
+
 // MIDI out
 ~default_channel = 0;
 if( ~host=="mac", {
@@ -105,7 +117,6 @@ if( ~host=="mac", {
 };
 
 //Delay
-~delay_max = 2; // 2000 mseg
 ~yaeltex.ctls['Delay'].onChange = {|val|
 	val = val.linlin(0,127,0,~delay_max).asFloat;
 	//("SYNTH: Delay "++val).postln;
@@ -136,7 +147,7 @@ if( ~host=="mac", {
 
 //Cutoff
 ~yaeltex.ctls['Cutoff'].onChange = {|val|
-	val = val.linexp(0,127,20,20000).asFloat;
+	val = val.linlin(0,127,20,5000).asFloat;
 	//("SYNTH: Cutoff "++val).postln;
 	~osc_server_SuperCollider.sendMsg(~fx_cutoff, val);
 
@@ -226,6 +237,9 @@ if( ~host=="mac", {
 	~osc_server_APICultorService.sendMsg(~mir_spectral_centroid, val);
 
 	~osc_server_OpenStage.sendMsg('/EDIT', 'SpectralCentroid', '{"value":"'++val++'"}');
+
+	~audiostellar_spectral_centroid_value = val;
+	//~osc_server_AudioStellar.sendMsg(~mir_audiostellar_spectral_centroid, val);
 };
 
 //SpectralComplexity
@@ -322,11 +336,6 @@ if( ~host=="mac", {
 	if( val==1, { //to the rigth
 		~osc_server_SuperCollider.sendMsg("/synth/granular/trigger", 1);
 	});
-	if( val==0, {
-        //joystick abajo
-		~osc_server_SuperCollider.sendMsg("/synth/reset", 0, -1 ); //reset effect
-	});
-	
 };
 //Y: Freeze ON/OFF
 //~yaeltex.ctls['joy2Synth_y'].onChange = {|val|
@@ -334,11 +343,9 @@ if( ~host=="mac", {
 	val = val.linlin(0,127,1,0).asFloat;
 	//("Joystick2 (with-return) y value:"++val).postln;
 	if( val==1, {
-        //joystick arriba
 		~osc_server_SuperCollider.sendMsg("/synth/freeze", 1, -1 ); //ON , -1 means active_voice
 	});
 	if( val==0, {
-        //joystick abajo
 		~osc_server_SuperCollider.sendMsg("/synth/freeze", 0, -1 ); //OFF , -1 means active_voice
 	});
 };
@@ -368,11 +375,15 @@ if( ~host=="mac", {
 };
 //Y: Retrieve new sound / Reset descriptors
 ~yaeltex.joyReturnMIR[1].onChange = {|val|
-	val = val.linlin(0,127,1,0).asFloat;
+	//val = val.linlin(0,127,1,0).asFloat;
 	//("Joystick2 (with-return) y value:"++val).postln;
 	//Freeze ON/OFF
 	if( val==1, {
 		~osc_server_SuperCollider.sendMsg(~new_sound_retrieve, 1); //sends 1
+
+		("Audiostellar SpectralCentroid="++~audiostellar_spectral_centroid_value).postln;
+		~osc_server_AudioStellar.sendMsg(~mir_audiostellar_spectral_centroid, ~audiostellar_spectral_centroid_value);
+
 	});
 	if( val==0, {
 		~osc_server_SuperCollider.sendMsg(~mir_reset, 1);
